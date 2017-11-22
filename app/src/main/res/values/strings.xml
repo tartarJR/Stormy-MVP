@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Stormy</string>
+
+    <!--MainActivity-->
+    <string name="location_txt">Alcatraz Island, CA</string>
+    <string name="double_dash">--</string>
+    <string name="summary_init_txt">Getting current weather...</string>
+    <string name="humidity_label">HUMIDITY</string>
+    <string name="rain_label">RAIN?</string>
+    <string name="weather_icon_descr">Weather type icon image</string>
+    <string name="degree_image_descr">Degree image</string>
+
+    <string name="network_unavailable_msg">Network is unavailable!</string>
+
+    <!--AlertDialogFragment-->
+    <string name="alert_dialog_title">Ooopss! Sorry.</string>
+    <string name="alert_dialog_msg">There was an error. Please try again later.</string>
+    <string name="alert_dialog_btn_txt">OK</string>
+    <string name="refresh_image_descr">Refresh image</string>
+</resources>
