@@ -136,6 +136,22 @@ public class LocationProvider implements
         locationProviderCallback.getWeatherForecast(latitude, longitude, address);
     }
 
+    public void getCurrentLocation() {
+        try {
+            Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+            if (location == null) {
+                LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
+            } else {
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+                String address = getCompleteAddressString(location);
+                locationProviderCallback.getWeatherForecast(latitude, longitude, address);
+            }
+        } catch (SecurityException ex) {
+            Log.e(TAG, "SecurityException caught" + ex);
+        }
+    }
+
     // TODO check if Geocoder present
     private String getCompleteAddressString(Location location) {
         String address = "";

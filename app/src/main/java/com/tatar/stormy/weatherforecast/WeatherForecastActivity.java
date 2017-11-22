@@ -2,14 +2,15 @@ package com.tatar.stormy.weatherforecast;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.tatar.stormy.R;
-import com.tatar.stormy.location.LocationProviderCallback;
 import com.tatar.stormy.location.LocationProvider;
+import com.tatar.stormy.location.LocationProviderCallback;
 import com.tatar.stormy.model.WeatherForecast;
 import com.tatar.stormy.ui.AlertDialogFragment;
 import com.tatar.stormy.util.NetworkUtils;
@@ -20,6 +21,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class WeatherForecastActivity extends AppCompatActivity implements LocationProviderCallback, WeatherForecastView {
+
+    public static final String TAG = WeatherForecastActivity.class.getSimpleName();
 
     @BindView(R.id.timeTextView)
     TextView timeTextView;
@@ -55,7 +58,7 @@ public class WeatherForecastActivity extends AppCompatActivity implements Locati
 
     @OnClick(R.id.refreshImageView)
     void submit() {
-
+        locationProvider.getCurrentLocation();
     }
 
     @Override
@@ -113,6 +116,7 @@ public class WeatherForecastActivity extends AppCompatActivity implements Locati
 
     @Override
     public void getWeatherForecast(double latitude, double longitude, String address) {
+        Log.w(TAG, "DAFUQ");
         if (NetworkUtils.isNetworkAvailable(this)) {
             weatherForecastPresenter = new WeatherForecastPresenter(this, latitude, longitude, address);
             weatherForecastPresenter.execute();
