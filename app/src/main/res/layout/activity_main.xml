@@ -9,7 +9,7 @@
     android:paddingLeft="32dp"
     android:paddingRight="32dp"
     android:paddingTop="16dp"
-    tools:context="com.tatar.stormy.forecast.ForecastActivity">
+    tools:context="com.tatar.stormy.weatherforecast.WeatherForecastActivity">
 
     <ProgressBar
         android:id="@+id/progressBar"

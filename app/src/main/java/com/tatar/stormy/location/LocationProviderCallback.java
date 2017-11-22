@@ -5,5 +5,5 @@ package com.tatar.stormy.location;
  */
 
 public interface LocationProviderCallback {
-    void getForecast(double latitude, double longitude, String address);
+    void getWeatherForecast(double latitude, double longitude, String address);
 }

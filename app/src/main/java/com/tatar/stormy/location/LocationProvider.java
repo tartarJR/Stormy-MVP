@@ -35,41 +35,41 @@ public class LocationProvider implements
      */
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
-    private LocationProviderCallback mLocationProviderCallback;
-    private Context mContext;
-    private GoogleApiClient mGoogleApiClient;
-    private LocationRequest mLocationRequest;
+    private LocationProviderCallback locationProviderCallback;
+    private Context context;
+    private GoogleApiClient googleApiClient;
+    private LocationRequest locationRequest;
 
     public LocationProvider(Context context, LocationProviderCallback callback) {
 
         // TODO check if Google Play Services available
-        mGoogleApiClient = new GoogleApiClient.Builder(context)
+        googleApiClient = new GoogleApiClient.Builder(context)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
 
-        mLocationProviderCallback = callback;
+        locationProviderCallback = callback;
 
         // Create the LocationRequest object
-        mLocationRequest = LocationRequest.create()
+        locationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(10 * 1000)        // 10 seconds, in milliseconds
                 .setFastestInterval(1 * 1000); // 1 second, in milliseconds
 
-        mContext = context;
+        this.context = context;
     }
 
     public void connect() {
         Log.d(TAG, "connect: hit");
-        mGoogleApiClient.connect();
+        googleApiClient.connect();
     }
 
     public void disconnect() {
         Log.d(TAG, "disconnect: hit");
-        if (mGoogleApiClient.isConnected()) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-            mGoogleApiClient.disconnect();
+        if (googleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+            googleApiClient.disconnect();
         }
     }
 
@@ -78,14 +78,14 @@ public class LocationProvider implements
         Log.d(TAG, "onConnected: hit");
 
         try {
-            Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
             if (location == null) {
-                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+                LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
             } else {
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
                 String address = getCompleteAddressString(location);
-                mLocationProviderCallback.getForecast(latitude, longitude, address);
+                locationProviderCallback.getWeatherForecast(latitude, longitude, address);
             }
         } catch (SecurityException ex) {
             Log.e(TAG, "SecurityException caught" + ex);
@@ -105,9 +105,9 @@ public class LocationProvider implements
          * start a Google Play services activity that can resolve
          * error.
          */
-        if (connectionResult.hasResolution() && mContext instanceof Activity) {
+        if (connectionResult.hasResolution() && context instanceof Activity) {
             try {
-                Activity activity = (Activity) mContext;
+                Activity activity = (Activity) context;
                 // Start an Activity that tries to resolve the error
                 connectionResult.startResolutionForResult(activity, CONNECTION_FAILURE_RESOLUTION_REQUEST);
             /*
@@ -133,13 +133,13 @@ public class LocationProvider implements
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
         String address = getCompleteAddressString(location);
-        mLocationProviderCallback.getForecast(latitude, longitude, address);
+        locationProviderCallback.getWeatherForecast(latitude, longitude, address);
     }
 
     // TODO check if Geocoder present
     private String getCompleteAddressString(Location location) {
         String address = "";
-        Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
+        Geocoder geocoder = new Geocoder(context, Locale.getDefault());
 
         try {
             List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);

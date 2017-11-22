@@ -3,8 +3,7 @@ package com.tatar.stormy.networking;
 import android.util.Log;
 
 import com.tatar.stormy.BuildConfig;
-import com.tatar.stormy.location.LocationProvider;
-import com.tatar.stormy.model.Forecast;
+import com.tatar.stormy.model.WeatherForecast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,9 +18,9 @@ import okhttp3.Response;
  * Created by musta on 11/21/2017.
  */
 
-public class ForecastService {
+public class WeatherForecastService {
 
-    public static final String TAG = ForecastService.class.getSimpleName();
+    public static final String TAG = WeatherForecastService.class.getSimpleName();
 
     private static final String BASE_URL = "https://api.darksky.net/forecast/";
     private static final String API_KEY = BuildConfig.DARK_SKY_API_KEY;
@@ -32,13 +31,13 @@ public class ForecastService {
 
     private OkHttpClient okHttpClient;
 
-    public ForecastService() {
+    public WeatherForecastService() {
         okHttpClient = new OkHttpClient();
     }
 
-    public Forecast getCurrentWeather(double latitude, double longitude) {
+    public WeatherForecast getCurrentWeather(double latitude, double longitude) {
 
-        Forecast forecast = null;
+        WeatherForecast weatherForecast = null;
 
         Request request = new Request.Builder()
                 .url(FORECAST_URL + latitude + "," + longitude + TEMP_UNIT)
@@ -50,7 +49,7 @@ public class ForecastService {
             String jsonData = response.body().string();
 
             if (response.isSuccessful()) {
-                forecast = JsonUtils.getCurrentWeather(jsonData);
+                weatherForecast = JsonUtils.getCurrentWeather(jsonData);
             }
         } catch (IOException e) {
             Log.e(TAG, "IOException Caught: " + e);
@@ -58,7 +57,7 @@ public class ForecastService {
             Log.e(TAG, "JSONException Caught: " + e);
         }
 
-        return forecast;
+        return weatherForecast;
     }
 
      // TODO use gson or jackson, remove static class
@@ -76,12 +75,12 @@ public class ForecastService {
         private static final String TIMEZONE_KEY = "timezone";
         private static final String TIMEZONE_CURRENTLY = "currently";
 
-        // parses given JSON string to a Forecast object
-        public static Forecast getCurrentWeather(String jsonData) throws JSONException {
+        // parses given JSON string to a WeatherForecast object
+        public static WeatherForecast getCurrentWeather(String jsonData) throws JSONException {
             JSONObject forecast = new JSONObject(jsonData);
             JSONObject currently = forecast.getJSONObject(TIMEZONE_CURRENTLY);
 
-            Forecast currentWeather = new Forecast();
+            WeatherForecast currentWeather = new WeatherForecast();
             currentWeather.setIcon(currently.getString(ICON_KEY));
             currentWeather.setTime(currently.getLong(TIME_KEY));
             currentWeather.setTemperature(currently.getDouble(TEMPERATURE_KEY));

@@ -1,4 +1,4 @@
-package com.tatar.stormy.forecast;
+package com.tatar.stormy.weatherforecast;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.tatar.stormy.R;
 import com.tatar.stormy.location.LocationProviderCallback;
 import com.tatar.stormy.location.LocationProvider;
-import com.tatar.stormy.model.Forecast;
+import com.tatar.stormy.model.WeatherForecast;
 import com.tatar.stormy.ui.AlertDialogFragment;
 import com.tatar.stormy.util.NetworkUtils;
 import com.tatar.stormy.util.PermissionUtil;
@@ -19,7 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ForecastActivity extends AppCompatActivity implements LocationProviderCallback, ForecastView {
+public class WeatherForecastActivity extends AppCompatActivity implements LocationProviderCallback, WeatherForecastView {
 
     @BindView(R.id.timeTextView)
     TextView timeTextView;
@@ -40,8 +40,8 @@ public class ForecastActivity extends AppCompatActivity implements LocationProvi
     @BindView(R.id.locationTextView)
     TextView locationTextView;
 
-    private LocationProvider mLocationProvider;
-    private ForecastPresenter forecastPresenter;
+    private LocationProvider locationProvider;
+    private WeatherForecastPresenter weatherForecastPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +50,7 @@ public class ForecastActivity extends AppCompatActivity implements LocationProvi
 
         ButterKnife.bind(this);
 
-        mLocationProvider = new LocationProvider(this, this);
+        locationProvider = new LocationProvider(this, this);
     }
 
     @OnClick(R.id.refreshImageView)
@@ -65,7 +65,7 @@ public class ForecastActivity extends AppCompatActivity implements LocationProvi
         if (!PermissionUtil.isPermissionsGranted(this)) {
             PermissionUtil.askPermissions(this);
         } else {
-            mLocationProvider.connect();
+            locationProvider.connect();
         }
     }
 
@@ -73,7 +73,7 @@ public class ForecastActivity extends AppCompatActivity implements LocationProvi
     protected void onPause() {
         super.onPause();
 
-        mLocationProvider.disconnect();
+        locationProvider.disconnect();
     }
 
     @Override
@@ -101,21 +101,21 @@ public class ForecastActivity extends AppCompatActivity implements LocationProvi
     }
 
     @Override
-    public void updateUi(Forecast forecast, String address) {
-        timeTextView.setText(forecast.getFormattedTime());
-        temperatureTextView.setText(forecast.getTemperature());
-        humidityTextView.setText(forecast.getHumidity());
-        precipChanceTextView.setText(forecast.getPrecipChance());
-        summaryTextView.setText(forecast.getSummary());
-        iconImageView.setImageDrawable(getResources().getDrawable(forecast.getIconId()));
+    public void updateUi(WeatherForecast weatherForecast, String address) {
+        timeTextView.setText(weatherForecast.getFormattedTime());
+        temperatureTextView.setText(weatherForecast.getTemperature());
+        humidityTextView.setText(weatherForecast.getHumidity());
+        precipChanceTextView.setText(weatherForecast.getPrecipChance());
+        summaryTextView.setText(weatherForecast.getSummary());
+        iconImageView.setImageDrawable(getResources().getDrawable(weatherForecast.getIconId()));
         locationTextView.setText(address);
     }
 
     @Override
-    public void getForecast(double latitude, double longitude, String address) {
+    public void getWeatherForecast(double latitude, double longitude, String address) {
         if (NetworkUtils.isNetworkAvailable(this)) {
-            forecastPresenter = new ForecastPresenter(this, latitude, longitude, address);
-            forecastPresenter.execute();
+            weatherForecastPresenter = new WeatherForecastPresenter(this, latitude, longitude, address);
+            weatherForecastPresenter.execute();
         }
     }
 }
