@@ -2,11 +2,11 @@ package com.tatar.stormy.weatherforecast;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tatar.stormy.R;
 import com.tatar.stormy.location.LocationProvider;
@@ -58,7 +58,7 @@ public class WeatherForecastActivity extends AppCompatActivity implements Locati
 
     @OnClick(R.id.refreshImageView)
     void submit() {
-        locationProvider.getCurrentLocation();
+        locationProvider.getLastLocation();
     }
 
     @Override
@@ -115,11 +115,12 @@ public class WeatherForecastActivity extends AppCompatActivity implements Locati
     }
 
     @Override
-    public void getWeatherForecast(double latitude, double longitude, String address) {
-        Log.w(TAG, "DAFUQ");
+    public void onLocationReceived(double latitude, double longitude, String address) {
         if (NetworkUtils.isNetworkAvailable(this)) {
             weatherForecastPresenter = new WeatherForecastPresenter(this, latitude, longitude, address);
             weatherForecastPresenter.execute();
+        } else {
+            Toast.makeText(this, getString(R.string.network_unavailable_msg), Toast.LENGTH_LONG).show();
         }
     }
 }

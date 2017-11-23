@@ -35,10 +35,10 @@ public class LocationProvider implements
      */
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
-    private LocationProviderCallback locationProviderCallback;
     private Context context;
     private GoogleApiClient googleApiClient;
     private LocationRequest locationRequest;
+    private LocationProviderCallback locationProviderCallback;
 
     public LocationProvider(Context context, LocationProviderCallback callback) {
 
@@ -51,6 +51,7 @@ public class LocationProvider implements
 
         locationProviderCallback = callback;
 
+        // TODO refactor constants
         // Create the LocationRequest object
         locationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
@@ -76,20 +77,7 @@ public class LocationProvider implements
     @Override
     public void onConnected(Bundle bundle) {
         Log.d(TAG, "onConnected: hit");
-
-        try {
-            Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-            if (location == null) {
-                LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
-            } else {
-                double latitude = location.getLatitude();
-                double longitude = location.getLongitude();
-                String address = getCompleteAddressString(location);
-                locationProviderCallback.getWeatherForecast(latitude, longitude, address);
-            }
-        } catch (SecurityException ex) {
-            Log.e(TAG, "SecurityException caught" + ex);
-        }
+        getLastLocation();
     }
 
     @Override
@@ -116,7 +104,7 @@ public class LocationProvider implements
              */
             } catch (IntentSender.SendIntentException e) {
                 // Log the error
-                e.printStackTrace();
+                Log.e(TAG, "Error onConnectionFailed: " + e);
             }
         } else {
             /*
@@ -130,30 +118,31 @@ public class LocationProvider implements
     @Override
     public void onLocationChanged(Location location) {
         Log.d(TAG, "onLocationChanged: hit");
-        double latitude = location.getLatitude();
-        double longitude = location.getLongitude();
-        String address = getCompleteAddressString(location);
-        locationProviderCallback.getWeatherForecast(latitude, longitude, address);
+        updateLocation(location);
     }
 
-    public void getCurrentLocation() {
+    public void getLastLocation() {
         try {
             Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
             if (location == null) {
                 LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
             } else {
-                double latitude = location.getLatitude();
-                double longitude = location.getLongitude();
-                String address = getCompleteAddressString(location);
-                locationProviderCallback.getWeatherForecast(latitude, longitude, address);
+                updateLocation(location);
             }
         } catch (SecurityException ex) {
             Log.e(TAG, "SecurityException caught" + ex);
         }
     }
 
+    private void updateLocation(Location location) {
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+        String address = getCompleteAddress(location);
+        locationProviderCallback.onLocationReceived(latitude, longitude, address);
+    }
+
     // TODO check if Geocoder present
-    private String getCompleteAddressString(Location location) {
+    private String getCompleteAddress(Location location) {
         String address = "";
         Geocoder geocoder = new Geocoder(context, Locale.getDefault());
 
