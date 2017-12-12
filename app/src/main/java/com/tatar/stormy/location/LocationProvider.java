@@ -165,9 +165,11 @@ public class LocationProvider implements
                 address = strReturnedAddress.toString();
                 Log.w(TAG, strReturnedAddress.toString());
             } else {
+                address = "Unknown Location";
                 Log.d(TAG, "No Address returned.");
             }
         } catch (Exception e) {
+            address = "Unknown Location";
             Log.e(TAG, "Failed to get adddress: " + e);
         }
 
