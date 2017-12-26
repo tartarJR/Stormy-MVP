@@ -20,7 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class WeatherForecastActivity extends AppCompatActivity implements LocationProviderCallback, WeatherForecastView {
+public class WeatherForecastActivity extends AppCompatActivity implements LocationProviderCallback, WeatherForecastContract.View{
 
     public static final String TAG = WeatherForecastActivity.class.getSimpleName();
 
@@ -54,6 +54,7 @@ public class WeatherForecastActivity extends AppCompatActivity implements Locati
         ButterKnife.bind(this);
 
         locationProvider = new LocationProvider(this, this);
+        weatherForecastPresenter = new WeatherForecastPresenter(this);
     }
 
     @OnClick(R.id.refreshImageView)
@@ -77,6 +78,12 @@ public class WeatherForecastActivity extends AppCompatActivity implements Locati
         super.onPause();
 
         locationProvider.disconnect();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        weatherForecastPresenter.stop();
     }
 
     @Override
@@ -117,8 +124,7 @@ public class WeatherForecastActivity extends AppCompatActivity implements Locati
     @Override
     public void onLocationReceived(double latitude, double longitude, String address) {
         if (NetworkUtils.isNetworkAvailable(this)) {
-            weatherForecastPresenter = new WeatherForecastPresenter(this, latitude, longitude, address);
-            weatherForecastPresenter.execute();
+            weatherForecastPresenter.fetchWeatherForecastData(latitude, longitude, address);
         } else {
             Toast.makeText(this, getString(R.string.network_unavailable_msg), Toast.LENGTH_LONG).show();
         }

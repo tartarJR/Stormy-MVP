@@ -1,4 +1,4 @@
-package com.tatar.stormy.networking;
+package com.tatar.stormy.service;
 
 import android.util.Log;
 

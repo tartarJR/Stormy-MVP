@@ -2,49 +2,29 @@ package com.tatar.stormy.weatherforecast;
 
 import android.os.AsyncTask;
 
-import com.tatar.stormy.model.WeatherForecast;
-import com.tatar.stormy.networking.WeatherForecastService;
-
 /**
- * Created by musta on 11/22/2017.
+ * Created by mobile on 26.12.2017.
  */
 
-public class WeatherForecastPresenter extends AsyncTask<Void, Void, WeatherForecast> {
+public class WeatherForecastPresenter implements WeatherForecastContract.Presenter {
 
-    private double latitude;
-    private double longitude;
-    private String address;
+    private WeatherForecastContract.View view;
+    private WeatherForecastInteractor weatherForecastInteractor;
 
-    private WeatherForecastService weatherForecastService;
-    private WeatherForecastView weatherForecastView;
-
-    public WeatherForecastPresenter(WeatherForecastView weatherForecastView, double latitude, double longitude, String address) {
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.address = address;
-
-        this.weatherForecastView = weatherForecastView;
-        weatherForecastService = new WeatherForecastService();
+    public WeatherForecastPresenter(WeatherForecastContract.View view) {
+        this.view = view;
     }
 
     @Override
-    protected void onPreExecute() {
-        weatherForecastView.toggleRefresh();
-    }
-
-    @Override
-    protected WeatherForecast doInBackground(Void... voids) {
-        return weatherForecastService.getCurrentWeather(latitude, longitude);
-    }
-
-    @Override
-    protected void onPostExecute(WeatherForecast weatherForecast) {
-        weatherForecastView.toggleRefresh();
-
-        if (weatherForecast != null) {
-            weatherForecastView.updateUi(weatherForecast, address);
-        } else {
-            weatherForecastView.displayErrorDialog();
+    public void stop() {
+        if (weatherForecastInteractor != null && weatherForecastInteractor.getStatus() == AsyncTask.Status.RUNNING) {
+            weatherForecastInteractor.cancel(true);
         }
+    }
+
+    @Override
+    public void fetchWeatherForecastData(double latitude, double longitude, String address) {
+        weatherForecastInteractor = new WeatherForecastInteractor(latitude, longitude, address, view);
+        weatherForecastInteractor.execute();
     }
 }
