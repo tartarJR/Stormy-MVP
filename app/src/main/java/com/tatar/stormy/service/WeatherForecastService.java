@@ -35,7 +35,7 @@ public class WeatherForecastService {
         okHttpClient = new OkHttpClient();
     }
 
-    public WeatherForecast getCurrentWeather(double latitude, double longitude) {
+    public WeatherForecast getCurrentWeatherForecastData(double latitude, double longitude) {
 
         WeatherForecast weatherForecast = null;
 

@@ -18,6 +18,7 @@ public class WeatherForecast {
     private double precipChance;
     private String summary;
     private String timeZone;
+    private String address;
 
     public String getIcon() {
         return icon;
@@ -109,6 +110,14 @@ public class WeatherForecast {
         }
 
         return iconId;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     @Override

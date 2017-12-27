@@ -3,8 +3,6 @@ package com.tatar.stormy.location;
 import android.app.Activity;
 import android.content.Context;
 import android.content.IntentSender;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,19 +13,16 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
-import java.util.List;
-import java.util.Locale;
-
 /**
  * Created by musta on 11/21/2017.
  */
 
-public class LocationProvider implements
+public class LocationService implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
-    public static final String TAG = LocationProvider.class.getSimpleName();
+    public static final String TAG = LocationService.class.getSimpleName();
 
     /*
      * Define a request code to send to Google Play services
@@ -38,9 +33,9 @@ public class LocationProvider implements
     private Context context;
     private GoogleApiClient googleApiClient;
     private LocationRequest locationRequest;
-    private LocationProviderCallback locationProviderCallback;
+    private LocationCallback locationCallback;
 
-    public LocationProvider(Context context, LocationProviderCallback callback) {
+    public LocationService(Context context, LocationCallback callback) {
 
         // TODO check if Google Play Services available
         googleApiClient = new GoogleApiClient.Builder(context)
@@ -49,7 +44,7 @@ public class LocationProvider implements
                 .addApi(LocationServices.API)
                 .build();
 
-        locationProviderCallback = callback;
+        locationCallback = callback;
 
         // TODO refactor constants
         // Create the LocationRequest object
@@ -122,6 +117,8 @@ public class LocationProvider implements
     }
 
     public void getLastLocation() {
+        Log.d(TAG, "getLastLocation: hit");
+
         try {
             Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
             if (location == null) {
@@ -137,42 +134,6 @@ public class LocationProvider implements
     private void updateLocation(Location location) {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
-        String address = getCompleteAddress(location);
-        locationProviderCallback.onLocationReceived(latitude, longitude, address);
-    }
-
-    // TODO check if Geocoder present
-    private String getCompleteAddress(Location location) {
-        String address = "";
-        Geocoder geocoder = new Geocoder(context, Locale.getDefault());
-
-        try {
-            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-
-            if (addresses != null) {
-                Address returnedAddress = addresses.get(0);
-                StringBuilder strReturnedAddress = new StringBuilder("");
-
-                for (int i = 0; i <= returnedAddress.getMaxAddressLineIndex(); i++) {
-                    if (!returnedAddress.getAddressLine(i).isEmpty() || !returnedAddress.getAddressLine(i).equals(null)) {
-                        strReturnedAddress.append(returnedAddress.getAddressLine(i));
-                    }
-                    if (i != returnedAddress.getMaxAddressLineIndex()) {
-                        strReturnedAddress.append(", ");
-                    }
-                }
-
-                address = strReturnedAddress.toString();
-                Log.w(TAG, strReturnedAddress.toString());
-            } else {
-                address = "Unknown Location";
-                Log.d(TAG, "No Address returned.");
-            }
-        } catch (Exception e) {
-            address = "Unknown Location";
-            Log.e(TAG, "Failed to get adddress: " + e);
-        }
-
-        return address;
+        locationCallback.onLocationReceived(latitude, longitude);
     }
 }

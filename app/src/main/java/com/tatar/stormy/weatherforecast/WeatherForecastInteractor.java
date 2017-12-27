@@ -2,6 +2,7 @@ package com.tatar.stormy.weatherforecast;
 
 import android.os.AsyncTask;
 
+import com.tatar.stormy.location.AddressFinder;
 import com.tatar.stormy.model.WeatherForecast;
 import com.tatar.stormy.service.WeatherForecastService;
 
@@ -13,18 +14,18 @@ public class WeatherForecastInteractor extends AsyncTask<Void, Void, WeatherFore
 
     private double latitude;
     private double longitude;
-    private String address;
 
     private WeatherForecastContract.View view;
     private WeatherForecastService weatherForecastService;
+    private AddressFinder addressFinder;
 
-    public WeatherForecastInteractor(double latitude, double longitude, String address, WeatherForecastContract.View view){
+    public WeatherForecastInteractor(double latitude, double longitude, WeatherForecastContract.View view){
         this.latitude = latitude;
         this.longitude = longitude;
-        this.address = address;
 
         this.view = view;
         weatherForecastService = new WeatherForecastService();
+        addressFinder = new AddressFinder(view.getContext());
     }
 
     @Override
@@ -34,7 +35,14 @@ public class WeatherForecastInteractor extends AsyncTask<Void, Void, WeatherFore
 
     @Override
     protected WeatherForecast doInBackground(Void... voids) {
-        return weatherForecastService.getCurrentWeather(latitude, longitude);
+        WeatherForecast weatherForecast = weatherForecastService.getCurrentWeatherForecastData(latitude, longitude);
+
+        if (weatherForecast != null) {
+            String address = addressFinder.getCompleteAddress(latitude, longitude);
+            weatherForecast.setAddress(address);
+        }
+
+        return weatherForecast;
     }
 
     @Override
@@ -42,9 +50,9 @@ public class WeatherForecastInteractor extends AsyncTask<Void, Void, WeatherFore
         view.toggleRefresh();
 
         if (weatherForecast != null) {
-            view.updateUi(weatherForecast, address);
+            view.displayWeatherForecastData(weatherForecast);
         } else {
-            view.displayErrorDialog();
+            view.diplayServiceError();
         }
     }
 

@@ -1,20 +1,24 @@
 package com.tatar.stormy.weatherforecast;
 
+import android.content.Context;
+
 import com.tatar.stormy.model.WeatherForecast;
 
 public interface WeatherForecastContract {
 
     interface Presenter{
         void stop();
-        void fetchWeatherForecastData(double latitude, double longitude, String address);
+        void fetchWeatherForecastData(double latitude, double longitude);
     }
 
     interface View{
-        void displayErrorDialog();
+        void diplayServiceError();
 
         void toggleRefresh();
 
-        void updateUi(WeatherForecast weatherForecast, String address);
+        void displayWeatherForecastData(WeatherForecast weatherForecast);
+
+        Context getContext();
     }
 
 }

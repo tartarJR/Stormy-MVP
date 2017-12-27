@@ -1,18 +1,18 @@
 package com.tatar.stormy.weatherforecast;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.tatar.stormy.R;
-import com.tatar.stormy.location.LocationProvider;
-import com.tatar.stormy.location.LocationProviderCallback;
+import com.tatar.stormy.location.LocationCallback;
+import com.tatar.stormy.location.LocationService;
 import com.tatar.stormy.model.WeatherForecast;
-import com.tatar.stormy.ui.AlertDialogFragment;
 import com.tatar.stormy.util.NetworkUtils;
 import com.tatar.stormy.util.PermissionUtil;
 
@@ -20,7 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class WeatherForecastActivity extends AppCompatActivity implements LocationProviderCallback, WeatherForecastContract.View{
+public class WeatherForecastActivity extends AppCompatActivity implements LocationCallback, WeatherForecastContract.View {
 
     public static final String TAG = WeatherForecastActivity.class.getSimpleName();
 
@@ -43,7 +43,7 @@ public class WeatherForecastActivity extends AppCompatActivity implements Locati
     @BindView(R.id.locationTextView)
     TextView locationTextView;
 
-    private LocationProvider locationProvider;
+    private LocationService locationService;
     private WeatherForecastPresenter weatherForecastPresenter;
 
     @Override
@@ -53,13 +53,19 @@ public class WeatherForecastActivity extends AppCompatActivity implements Locati
 
         ButterKnife.bind(this);
 
-        locationProvider = new LocationProvider(this, this);
+        locationService = new LocationService(this, this);
         weatherForecastPresenter = new WeatherForecastPresenter(this);
     }
 
     @OnClick(R.id.refreshImageView)
     void submit() {
-        locationProvider.getLastLocation();
+        Log.d(TAG, "refreshImageView: click");
+
+        if (NetworkUtils.isNetworkAvailable(this)) {
+            locationService.getLastLocation();
+        } else {
+            displayEmptyScreenWithMsg(R.string.summary_network_error_txt);
+        }
     }
 
     @Override
@@ -69,7 +75,7 @@ public class WeatherForecastActivity extends AppCompatActivity implements Locati
         if (!PermissionUtil.isPermissionsGranted(this)) {
             PermissionUtil.askPermissions(this);
         } else {
-            locationProvider.connect();
+            locationService.connect();
         }
     }
 
@@ -77,7 +83,7 @@ public class WeatherForecastActivity extends AppCompatActivity implements Locati
     protected void onPause() {
         super.onPause();
 
-        locationProvider.disconnect();
+        locationService.disconnect();
     }
 
     @Override
@@ -87,9 +93,8 @@ public class WeatherForecastActivity extends AppCompatActivity implements Locati
     }
 
     @Override
-    public void displayErrorDialog() {
-        AlertDialogFragment alertDialogFragment = new AlertDialogFragment();
-        alertDialogFragment.show(getFragmentManager(), "error_dialog");
+    public void diplayServiceError() {
+        displayEmptyScreenWithMsg(R.string.summary_service_error_txt);
     }
 
     @Override
@@ -98,12 +103,7 @@ public class WeatherForecastActivity extends AppCompatActivity implements Locati
             progressBar.setVisibility(View.VISIBLE);
             refreshImageView.setVisibility(View.INVISIBLE);
 
-            timeTextView.setText(R.string.double_dash);
-            temperatureTextView.setText(R.string.double_dash);
-            humidityTextView.setText(R.string.double_dash);
-            precipChanceTextView.setText(R.string.double_dash);
-            locationTextView.setText(R.string.double_dash);
-            summaryTextView.setText(R.string.summary_init_txt);
+            displayEmptyScreenWithMsg(R.string.summary_init_txt);
         } else {
             progressBar.setVisibility(View.INVISIBLE);
             refreshImageView.setVisibility(View.VISIBLE);
@@ -111,22 +111,37 @@ public class WeatherForecastActivity extends AppCompatActivity implements Locati
     }
 
     @Override
-    public void updateUi(WeatherForecast weatherForecast, String address) {
+    public void displayWeatherForecastData(WeatherForecast weatherForecast) {
         timeTextView.setText(weatherForecast.getFormattedTime());
         temperatureTextView.setText(weatherForecast.getTemperature());
         humidityTextView.setText(weatherForecast.getHumidity());
         precipChanceTextView.setText(weatherForecast.getPrecipChance());
         summaryTextView.setText(weatherForecast.getSummary());
         iconImageView.setImageDrawable(getResources().getDrawable(weatherForecast.getIconId()));
-        locationTextView.setText(address);
+        locationTextView.setText(weatherForecast.getAddress());
     }
 
     @Override
-    public void onLocationReceived(double latitude, double longitude, String address) {
+    public Context getContext() {
+        return WeatherForecastActivity.this;
+    }
+
+    private void displayEmptyScreenWithMsg(int msgId) {
+        timeTextView.setText(R.string.double_dash);
+        temperatureTextView.setText(R.string.double_dash);
+        humidityTextView.setText(R.string.double_dash);
+        precipChanceTextView.setText(R.string.double_dash);
+        locationTextView.setText(R.string.double_dash);
+        iconImageView.setImageDrawable(null);
+        summaryTextView.setText(msgId);
+    }
+
+    @Override
+    public void onLocationReceived(double latitude, double longitude) {
         if (NetworkUtils.isNetworkAvailable(this)) {
-            weatherForecastPresenter.fetchWeatherForecastData(latitude, longitude, address);
+            weatherForecastPresenter.fetchWeatherForecastData(latitude, longitude);
         } else {
-            Toast.makeText(this, getString(R.string.network_unavailable_msg), Toast.LENGTH_LONG).show();
+            displayEmptyScreenWithMsg(R.string.summary_network_error_txt);
         }
     }
 }
