@@ -13,19 +13,19 @@ public class CurrentWeatherTask extends AsyncTask<Double, Void, CurrentWeatherRe
 
     public static final Status TASK_STATUS_RUNNING = AsyncTask.Status.RUNNING;
 
-    private CurrentWeatherContract.View view;
+    private CurrentWeatherContract.CurrentWeatherView currentWeatherView;
     private WeatherForecastService weatherForecastService;
     private AddressFinder addressFinder;
 
-    public CurrentWeatherTask(CurrentWeatherContract.View view) {
-        this.view = view;
+    public CurrentWeatherTask(CurrentWeatherContract.CurrentWeatherView currentWeatherView) {
+        this.currentWeatherView = currentWeatherView;
         weatherForecastService = new WeatherForecastService();
-        addressFinder = new AddressFinder(view.getContext());
+        addressFinder = new AddressFinder(currentWeatherView.getContext());
     }
 
     @Override
     protected void onPreExecute() {
-        view.toggleRefresh();
+        currentWeatherView.toggleRefresh();
     }
 
     @Override
@@ -38,7 +38,7 @@ public class CurrentWeatherTask extends AsyncTask<Double, Void, CurrentWeatherRe
 
         CurrrentWeather currrentWeather = null;
 
-        if (NetworkUtils.isNetworkAvailable(view.getContext())) {
+        if (NetworkUtils.isNetworkAvailable(currentWeatherView.getContext())) {
 
             currrentWeather = weatherForecastService.getCurrentWeatherData(latitude, longitude);
 
@@ -62,14 +62,14 @@ public class CurrentWeatherTask extends AsyncTask<Double, Void, CurrentWeatherRe
 
     @Override
     protected void onPostExecute(CurrentWeatherResponse currentWeatherResponse) {
-        view.toggleRefresh();
+        currentWeatherView.toggleRefresh();
 
         if (currentWeatherResponse.getMessage().equals(CurrentWeatherResponse.SUCCESS_MSG)) {
-            view.displayCurrentWeatherData(currentWeatherResponse.getCurrrentWeather());
+            currentWeatherView.displayCurrentWeatherData(currentWeatherResponse.getCurrrentWeather());
         } else if (currentWeatherResponse.getMessage().equals(CurrentWeatherResponse.SERVICE_UNAVAILABLE_MSG)) {
-            view.displayEmptyScreenWithMsg(R.string.service_error_txt);
+            currentWeatherView.displayEmptyScreenWithMsg(R.string.service_error_txt);
         } else if (currentWeatherResponse.getMessage().equals(CurrentWeatherResponse.NO_NETWORK_CONNECTION_MSG)) {
-            view.displayEmptyScreenWithMsg(R.string.network_error_txt);
+            currentWeatherView.displayEmptyScreenWithMsg(R.string.network_error_txt);
         }
     }
 

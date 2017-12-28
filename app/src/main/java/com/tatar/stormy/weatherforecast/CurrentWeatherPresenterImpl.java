@@ -3,15 +3,15 @@ package com.tatar.stormy.weatherforecast;
 import com.tatar.stormy.location.LocationCallback;
 import com.tatar.stormy.location.LocationService;
 
-public class CurrentWeatherPresenter implements CurrentWeatherContract.Presenter, LocationCallback {
+public class CurrentWeatherPresenterImpl implements CurrentWeatherContract.CurrentWeatherPresenter, LocationCallback {
 
-    private CurrentWeatherContract.View view;
+    private CurrentWeatherContract.CurrentWeatherView currentWeatherView;
     private CurrentWeatherTask currentWeatherTask;
     private LocationService locationService;
 
-    public CurrentWeatherPresenter(CurrentWeatherContract.View view) {
-        this.view = view;
-        locationService = new LocationService(view.getContext(), this);
+    public CurrentWeatherPresenterImpl(CurrentWeatherContract.CurrentWeatherView currentWeatherView) {
+        this.currentWeatherView = currentWeatherView;
+        locationService = new LocationService(currentWeatherView.getContext(), this);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class CurrentWeatherPresenter implements CurrentWeatherContract.Presenter
     @Override
     public void onLocationReceived(double latitude, double longitude) {
         Double[] locationParams = {latitude, longitude};
-        currentWeatherTask = new CurrentWeatherTask(view); // TODO memory leak is possible here, check it later
+        currentWeatherTask = new CurrentWeatherTask(currentWeatherView); // TODO memory leak is possible here, check it later
         currentWeatherTask.execute(locationParams);
     }
 }

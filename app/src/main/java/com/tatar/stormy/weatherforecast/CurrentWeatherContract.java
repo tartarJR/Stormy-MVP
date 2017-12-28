@@ -6,7 +6,7 @@ import com.tatar.stormy.model.CurrrentWeather;
 
 public interface CurrentWeatherContract {
 
-    interface Presenter {
+    interface CurrentWeatherPresenter {
         void connectToLocationService();
 
         void disconnectFromLocationService();
@@ -16,7 +16,7 @@ public interface CurrentWeatherContract {
         void cancelCurrentWeatherTask();
     }
 
-    interface View {
+    interface CurrentWeatherView {
         void displayEmptyScreenWithMsg(int msgId);
 
         void toggleRefresh();

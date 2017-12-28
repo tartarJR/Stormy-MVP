@@ -29,6 +29,8 @@ public class LocationService implements
      * This code is returned in Activity.onActivityResult
      */
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    private final static int INTERVAL_TIME = 10 * 1000; // 10 seconds, in milliseconds
+    private final static int FASTEST_INTERVAL_TIME = 1 * 1000; // 1 second, in milliseconds
 
     private Context context;
     private GoogleApiClient googleApiClient;
@@ -46,12 +48,11 @@ public class LocationService implements
 
         locationCallback = callback;
 
-        // TODO refactor constants
         // Create the LocationRequest object
         locationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(10 * 1000)        // 10 seconds, in milliseconds
-                .setFastestInterval(1 * 1000); // 1 second, in milliseconds
+                .setInterval(INTERVAL_TIME)
+                .setFastestInterval(FASTEST_INTERVAL_TIME);
 
         this.context = context;
     }

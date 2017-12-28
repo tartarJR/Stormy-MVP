@@ -16,7 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CurrentWeatherActivity extends AppCompatActivity implements CurrentWeatherContract.View {
+public class CurrentWeatherActivity extends AppCompatActivity implements CurrentWeatherContract.CurrentWeatherView {
 
     @BindView(R.id.timeTextView)
     TextView timeTextView;
@@ -37,7 +37,7 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Current
     @BindView(R.id.locationTextView)
     TextView locationTextView;
 
-    private CurrentWeatherPresenter currentWeatherPresenter;
+    private CurrentWeatherPresenterImpl currentWeatherPresenterImpl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +46,12 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Current
 
         ButterKnife.bind(this);
 
-        currentWeatherPresenter = new CurrentWeatherPresenter(this);
+        currentWeatherPresenterImpl = new CurrentWeatherPresenterImpl(this);
     }
 
     @OnClick(R.id.refreshImageView)
-    void submit() {
-        currentWeatherPresenter.getLastLocation();
+    void refresh() {
+        currentWeatherPresenterImpl.getLastLocation();
     }
 
     @Override
@@ -59,7 +59,7 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Current
         super.onResume();
 
         if (PermissionUtil.isPermissionsGranted(this)) {
-            currentWeatherPresenter.connectToLocationService();
+            currentWeatherPresenterImpl.connectToLocationService();
         } else {
             PermissionUtil.askPermissions(this);
         }
@@ -68,13 +68,13 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Current
     @Override
     protected void onPause() {
         super.onPause();
-        currentWeatherPresenter.disconnectFromLocationService();
+        currentWeatherPresenterImpl.disconnectFromLocationService();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        currentWeatherPresenter.cancelCurrentWeatherTask();
+        currentWeatherPresenterImpl.cancelCurrentWeatherTask();
     }
 
     @Override
