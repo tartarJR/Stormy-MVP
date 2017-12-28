@@ -9,7 +9,7 @@
     android:paddingLeft="32dp"
     android:paddingRight="32dp"
     android:paddingTop="16dp"
-    tools:context="com.tatar.stormy.weatherforecast.WeatherForecastActivity">
+    tools:context="com.tatar.stormy.weatherforecast.CurrentWeatherActivity">
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -149,7 +149,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
         android:gravity="center_horizontal"
-        android:text="@string/summary_init_txt"
         android:textColor="@android:color/white"
         android:textSize="18sp" />
 

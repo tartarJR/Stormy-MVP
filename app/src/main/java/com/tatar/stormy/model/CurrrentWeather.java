@@ -10,7 +10,7 @@ import java.util.TimeZone;
  * Created by musta on 11/17/2017.
  */
 
-public class WeatherForecast {
+public class CurrrentWeather {
     private String icon;
     private long time;
     private double temperature;
@@ -122,7 +122,7 @@ public class WeatherForecast {
 
     @Override
     public String toString() {
-        return "WeatherForecast{" +
+        return "CurrrentWeather{" +
                 "icon='" + icon + '\'' +
                 ", time=" + getFormattedTime() +
                 ", temperature=" + temperature +

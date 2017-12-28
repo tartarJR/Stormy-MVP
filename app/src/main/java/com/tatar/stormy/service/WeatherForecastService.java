@@ -3,7 +3,7 @@ package com.tatar.stormy.service;
 import android.util.Log;
 
 import com.tatar.stormy.BuildConfig;
-import com.tatar.stormy.model.WeatherForecast;
+import com.tatar.stormy.model.CurrrentWeather;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,9 +35,9 @@ public class WeatherForecastService {
         okHttpClient = new OkHttpClient();
     }
 
-    public WeatherForecast getCurrentWeatherForecastData(double latitude, double longitude) {
+    public CurrrentWeather getCurrentWeatherData(double latitude, double longitude) {
 
-        WeatherForecast weatherForecast = null;
+        CurrrentWeather currrentWeather = null;
 
         Request request = new Request.Builder()
                 .url(FORECAST_URL + latitude + "," + longitude + TEMP_UNIT)
@@ -49,7 +49,7 @@ public class WeatherForecastService {
             String jsonData = response.body().string();
 
             if (response.isSuccessful()) {
-                weatherForecast = JsonUtils.getCurrentWeather(jsonData);
+                currrentWeather = JsonUtils.getCurrentWeather(jsonData);
             }
         } catch (IOException e) {
             Log.e(TAG, "IOException Caught: " + e);
@@ -57,7 +57,7 @@ public class WeatherForecastService {
             Log.e(TAG, "JSONException Caught: " + e);
         }
 
-        return weatherForecast;
+        return currrentWeather;
     }
 
      // TODO use gson or jackson, remove static class
@@ -75,12 +75,12 @@ public class WeatherForecastService {
         private static final String TIMEZONE_KEY = "timezone";
         private static final String TIMEZONE_CURRENTLY = "currently";
 
-        // parses given JSON string to a WeatherForecast object
-        public static WeatherForecast getCurrentWeather(String jsonData) throws JSONException {
+        // parses given JSON string to a CurrrentWeather object
+        public static CurrrentWeather getCurrentWeather(String jsonData) throws JSONException {
             JSONObject forecast = new JSONObject(jsonData);
             JSONObject currently = forecast.getJSONObject(TIMEZONE_CURRENTLY);
 
-            WeatherForecast currentWeather = new WeatherForecast();
+            CurrrentWeather currentWeather = new CurrrentWeather();
             currentWeather.setIcon(currently.getString(ICON_KEY));
             currentWeather.setTime(currently.getLong(TIME_KEY));
             currentWeather.setTemperature(currently.getDouble(TEMPERATURE_KEY));
