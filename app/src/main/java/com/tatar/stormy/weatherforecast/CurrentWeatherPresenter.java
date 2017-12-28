@@ -1,13 +1,9 @@
 package com.tatar.stormy.weatherforecast;
 
-import android.util.Log;
-
 import com.tatar.stormy.location.LocationCallback;
 import com.tatar.stormy.location.LocationService;
 
 public class CurrentWeatherPresenter implements CurrentWeatherContract.Presenter, LocationCallback {
-
-    public static final String TAG = CurrentWeatherPresenter.class.getSimpleName();
 
     private CurrentWeatherContract.View view;
     private CurrentWeatherTask currentWeatherTask;
@@ -42,8 +38,6 @@ public class CurrentWeatherPresenter implements CurrentWeatherContract.Presenter
 
     @Override
     public void onLocationReceived(double latitude, double longitude) {
-        Log.d(TAG, "onLocationReceived: hit");
-
         Double[] locationParams = {latitude, longitude};
         currentWeatherTask = new CurrentWeatherTask(view); // TODO memory leak is possible here, check it later
         currentWeatherTask.execute(locationParams);

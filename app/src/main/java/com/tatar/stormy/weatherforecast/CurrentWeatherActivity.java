@@ -18,8 +18,6 @@ import butterknife.OnClick;
 
 public class CurrentWeatherActivity extends AppCompatActivity implements CurrentWeatherContract.View {
 
-    public static final String TAG = CurrentWeatherActivity.class.getSimpleName();
-
     @BindView(R.id.timeTextView)
     TextView timeTextView;
     @BindView(R.id.temperatureTextView)
