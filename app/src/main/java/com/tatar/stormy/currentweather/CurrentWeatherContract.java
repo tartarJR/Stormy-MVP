@@ -1,4 +1,4 @@
-package com.tatar.stormy.weatherforecast;
+package com.tatar.stormy.currentweather;
 
 import android.content.Context;
 

@@ -33,9 +33,8 @@ public class PermissionUtil {
 
     public static void askPermissions(final Activity activity) {
 
-        Log.d(TAG, "checkPermission");
-
         if (isRuntimePermissionRequired()) {
+            Log.d(TAG, "Runtime permission required");
             /*
                 Runtime permission required,
                 THE DEVICE IS RUNNING ON > 23

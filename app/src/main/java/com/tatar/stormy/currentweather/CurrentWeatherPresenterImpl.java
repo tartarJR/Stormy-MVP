@@ -1,4 +1,4 @@
-package com.tatar.stormy.weatherforecast;
+package com.tatar.stormy.currentweather;
 
 import com.tatar.stormy.location.LocationCallback;
 import com.tatar.stormy.location.LocationService;
