@@ -2,11 +2,12 @@ package com.tatar.stormy.currentweather;
 
 import com.tatar.stormy.location.LocationCallback;
 import com.tatar.stormy.location.LocationService;
+import com.tatar.stormy.service.WeatherForecastTask;
 
 public class CurrentWeatherPresenterImpl implements CurrentWeatherContract.CurrentWeatherPresenter, LocationCallback {
 
     private CurrentWeatherContract.CurrentWeatherView currentWeatherView;
-    private CurrentWeatherTask currentWeatherTask;
+    private WeatherForecastTask weatherForecastTask;
     private LocationService locationService;
 
     public CurrentWeatherPresenterImpl(CurrentWeatherContract.CurrentWeatherView currentWeatherView) {
@@ -31,15 +32,15 @@ public class CurrentWeatherPresenterImpl implements CurrentWeatherContract.Curre
 
     @Override
     public void cancelCurrentWeatherTask() {
-        if (currentWeatherTask != null && currentWeatherTask.getStatus() == CurrentWeatherTask.TASK_STATUS_RUNNING) {
-            currentWeatherTask.cancel(true);
+        if (weatherForecastTask != null && weatherForecastTask.getStatus() == WeatherForecastTask.TASK_STATUS_RUNNING) {
+            weatherForecastTask.cancel(true);
         }
     }
 
     @Override
     public void onLocationReceived(double latitude, double longitude) {
         Double[] locationParams = {latitude, longitude};
-        currentWeatherTask = new CurrentWeatherTask(currentWeatherView); // TODO memory leak is possible here, check it later
-        currentWeatherTask.execute(locationParams);
+        weatherForecastTask = new WeatherForecastTask(currentWeatherView); // TODO memory leak is possible here, check it later
+        weatherForecastTask.execute(locationParams);
     }
 }

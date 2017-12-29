@@ -1,15 +1,15 @@
 package com.tatar.stormy.service;
 
-import com.tatar.stormy.model.CurrrentWeather;
+import com.tatar.stormy.model.Forecast;
 
-public class CurrentWeatherResponse {
+public class WeatherForecastResponse {
 
     public static final String SUCCESS_MSG = "success";
     public static final String NO_NETWORK_CONNECTION_MSG = "network-unavailable";
     public static final String SERVICE_UNAVAILABLE_MSG = "service-unavailable";
 
     private String message;
-    private CurrrentWeather currrentWeather;
+    private Forecast forecast;
 
     public String getMessage() {
         return message;
@@ -19,11 +19,11 @@ public class CurrentWeatherResponse {
         this.message = message;
     }
 
-    public CurrrentWeather getCurrrentWeather() {
-        return currrentWeather;
+    public Forecast getForecast() {
+        return forecast;
     }
 
-    public void setCurrrentWeather(CurrrentWeather currrentWeather) {
-        this.currrentWeather = currrentWeather;
+    public void setForecast(Forecast forecast) {
+        this.forecast = forecast;
     }
 }
