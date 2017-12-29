@@ -54,6 +54,15 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Current
         currentWeatherPresenterImpl.getLastLocation();
     }
 
+    @OnClick(R.id.hourlyButton)
+    void goToHourly() {
+
+    }
+
+    @OnClick(R.id.dailyButton)
+    void goToDaily() {
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
