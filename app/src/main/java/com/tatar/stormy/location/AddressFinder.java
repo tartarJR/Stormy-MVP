@@ -40,10 +40,10 @@ public class AddressFinder {
                 }
 
                 address = strReturnedAddress.toString();
-                Log.w(TAG, strReturnedAddress.toString());
+                Log.i(TAG, strReturnedAddress.toString());
             } else {
                 address = "Unknown Location";
-                Log.d(TAG, "No Address returned.");
+                Log.i(TAG, "No Address returned.");
             }
         } catch (Exception e) {
             address = "Unknown Location";

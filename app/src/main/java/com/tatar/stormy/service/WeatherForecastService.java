@@ -43,8 +43,6 @@ public class WeatherForecastService {
 
         Forecast forecast = null;
 
-        CurrrentWeather currrentWeather = null;
-
         Request request = new Request.Builder()
                 .url(FORECAST_URL + latitude + "," + longitude + TEMP_UNIT)
                 .build();
@@ -102,6 +100,8 @@ public class WeatherForecastService {
             JSONObject forecast = new JSONObject(jsonData);
             JSONObject currently = forecast.getJSONObject(CURRENTLY_WEATHER);
 
+            Log.i(TAG, "currently: " + currently);
+
             CurrrentWeather currentWeather = new CurrrentWeather();
             currentWeather.setIcon(currently.getString(ICON_KEY));
             currentWeather.setTime(currently.getLong(TIME_KEY));
@@ -110,8 +110,6 @@ public class WeatherForecastService {
             currentWeather.setPrecipChance(currently.getDouble(PRECIP_PROB_KEY));
             currentWeather.setSummary(currently.getString(SUMMARY_KEY));
             currentWeather.setTimeZone(forecast.getString(TIMEZONE_KEY));
-
-            Log.i(TAG, currentWeather.toString());
 
             return currentWeather;
         }
@@ -122,7 +120,7 @@ public class WeatherForecastService {
             JSONObject hourly = forecast.getJSONObject(HOURLY_WEATHER);
             JSONArray hourlyData = hourly.getJSONArray(HOURLY_DATA);
 
-            Log.i(TAG, "hourly: " + hourlyData.toString());
+            Log.i(TAG, "hourly: " + hourlyData);
 
             HourlyWeather[] hourlyWeatherData = new HourlyWeather[hourlyData.length()];
             HourlyWeather hourlyWeather;
@@ -147,7 +145,7 @@ public class WeatherForecastService {
             JSONObject daily = forecast.getJSONObject(DAILY_WEATHER);
             JSONArray dailyData = daily.getJSONArray(HOURLY_DATA);
 
-            Log.i(TAG, "daily: " + dailyData.toString());
+            Log.i(TAG, "daily: " + dailyData);
 
             DailyWeather[] dailyWeatherData = new DailyWeather[dailyData.length()];
             DailyWeather dailyWeather;

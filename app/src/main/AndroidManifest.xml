@@ -22,6 +22,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".dailyweather.DailyWeatherActivity"
+            android:parentActivityName=".currentweather.CurrentWeatherActivity" />
+        <activity
+            android:name=".hourlyweather.HourlyWeatherActivity"
+            android:parentActivityName=".currentweather.CurrentWeatherActivity" />
     </application>
 
 </manifest>

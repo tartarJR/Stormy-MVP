@@ -58,12 +58,12 @@ public class LocationService implements
     }
 
     public void connect() {
-        Log.d(TAG, "connect: hit");
+        Log.i(TAG, "connect: hit");
         googleApiClient.connect();
     }
 
     public void disconnect() {
-        Log.d(TAG, "disconnect: hit");
+        Log.i(TAG, "disconnect: hit");
         if (googleApiClient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
             googleApiClient.disconnect();
@@ -72,7 +72,7 @@ public class LocationService implements
 
     @Override
     public void onConnected(Bundle bundle) {
-        Log.d(TAG, "onConnected: hit");
+        Log.i(TAG, "onConnected: hit");
         getLastLocation();
     }
 
@@ -107,18 +107,18 @@ public class LocationService implements
              * If no resolution is available, display a dialog to the
              * user with the error.
              */
-            Log.d(TAG, "Location services connection failed with code " + connectionResult.getErrorCode());
+            Log.i(TAG, "Location services connection failed with code " + connectionResult.getErrorCode());
         }
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.d(TAG, "onLocationChanged: hit");
+        Log.i(TAG, "onLocationChanged: hit");
         updateLocation(location);
     }
 
     public void getLastLocation() {
-        Log.d(TAG, "getLastLocation: hit");
+        Log.i(TAG, "getLastLocation: hit");
 
         try {
             Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);

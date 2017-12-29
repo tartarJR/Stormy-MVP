@@ -14,6 +14,10 @@ public interface CurrentWeatherContract {
         void getLastLocation();
 
         void cancelCurrentWeatherTask();
+
+        void openHourlyWeatherActivity();
+
+        void openDailyWeatherActivity();
     }
 
     interface CurrentWeatherView {
@@ -24,6 +28,12 @@ public interface CurrentWeatherContract {
         void displayCurrentWeatherData(CurrrentWeather currrentWeather);
 
         Context getContext();
+    }
+
+    interface Navigator {
+        void openHourlyWeatherActivity();
+
+        void openDailyWeatherActivity();
     }
 
 }

@@ -1,6 +1,7 @@
 package com.tatar.stormy.currentweather;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -9,6 +10,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.tatar.stormy.R;
+import com.tatar.stormy.dailyweather.DailyWeatherActivity;
+import com.tatar.stormy.hourlyweather.HourlyWeatherActivity;
 import com.tatar.stormy.model.CurrrentWeather;
 import com.tatar.stormy.util.PermissionUtil;
 
@@ -16,7 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CurrentWeatherActivity extends AppCompatActivity implements CurrentWeatherContract.CurrentWeatherView {
+public class CurrentWeatherActivity extends AppCompatActivity implements CurrentWeatherContract.CurrentWeatherView, CurrentWeatherContract.Navigator {
 
     @BindView(R.id.timeTextView)
     TextView timeTextView;
@@ -37,7 +40,7 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Current
     @BindView(R.id.locationTextView)
     TextView locationTextView;
 
-    private CurrentWeatherPresenterImpl currentWeatherPresenterImpl;
+    private CurrentWeatherContract.CurrentWeatherPresenter currentWeatherPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,21 +49,34 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Current
 
         ButterKnife.bind(this);
 
-        currentWeatherPresenterImpl = new CurrentWeatherPresenterImpl(this);
+        currentWeatherPresenter = new CurrentWeatherPresenterImpl(this, this);
     }
 
     @OnClick(R.id.refreshImageView)
     void refresh() {
-        currentWeatherPresenterImpl.getLastLocation();
+        currentWeatherPresenter.getLastLocation();
     }
 
     @OnClick(R.id.hourlyButton)
     void goToHourly() {
-
+        currentWeatherPresenter.openHourlyWeatherActivity();
     }
 
     @OnClick(R.id.dailyButton)
     void goToDaily() {
+        currentWeatherPresenter.openDailyWeatherActivity();
+    }
+
+    @Override
+    public void openHourlyWeatherActivity() {
+        Intent navigationIntent = new Intent(CurrentWeatherActivity.this, HourlyWeatherActivity.class);
+        startActivity(navigationIntent);
+    }
+
+    @Override
+    public void openDailyWeatherActivity() {
+        Intent navigationIntent = new Intent(CurrentWeatherActivity.this, DailyWeatherActivity.class);
+        startActivity(navigationIntent);
     }
 
     @Override
@@ -68,7 +84,7 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Current
         super.onResume();
 
         if (PermissionUtil.isPermissionsGranted(this)) {
-            currentWeatherPresenterImpl.connectToLocationService();
+            currentWeatherPresenter.connectToLocationService();
         } else {
             PermissionUtil.askPermissions(this);
         }
@@ -77,13 +93,13 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Current
     @Override
     protected void onPause() {
         super.onPause();
-        currentWeatherPresenterImpl.disconnectFromLocationService();
+        currentWeatherPresenter.disconnectFromLocationService();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        currentWeatherPresenterImpl.cancelCurrentWeatherTask();
+        currentWeatherPresenter.cancelCurrentWeatherTask();
     }
 
     @Override
