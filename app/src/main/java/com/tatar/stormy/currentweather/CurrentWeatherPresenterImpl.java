@@ -1,20 +1,24 @@
 package com.tatar.stormy.currentweather;
 
-import com.tatar.stormy.location.LocationCallback;
+import com.tatar.stormy.location.AddressFinder;
 import com.tatar.stormy.location.LocationService;
-import com.tatar.stormy.service.WeatherForecastTask;
+import com.tatar.stormy.util.NetworkUtil;
 
-public class CurrentWeatherPresenterImpl implements CurrentWeatherContract.CurrentWeatherPresenter, LocationCallback {
+public class CurrentWeatherPresenterImpl implements CurrentWeatherContract.CurrentWeatherPresenter {
 
     private CurrentWeatherContract.CurrentWeatherView currentWeatherView;
     private CurrentWeatherContract.Navigator navigator;
-    private WeatherForecastTask weatherForecastTask;
+    private CurrentWeatherTask currentWeatherTask;
+    private AddressFinder addressFinder;
     private LocationService locationService;
+    private NetworkUtil networkUtil;
 
-    public CurrentWeatherPresenterImpl(CurrentWeatherContract.CurrentWeatherView currentWeatherView, CurrentWeatherContract.Navigator navigator) {
+    public CurrentWeatherPresenterImpl(CurrentWeatherContract.CurrentWeatherView currentWeatherView, CurrentWeatherContract.Navigator navigator, LocationService locationService, AddressFinder addressFinder, NetworkUtil networkUtil) {
         this.currentWeatherView = currentWeatherView;
         this.navigator = navigator;
-        locationService = new LocationService(currentWeatherView.getContext(), this);
+        this.locationService = locationService;
+        this.addressFinder = addressFinder;
+        this.networkUtil = networkUtil;
     }
 
     @Override
@@ -28,14 +32,21 @@ public class CurrentWeatherPresenterImpl implements CurrentWeatherContract.Curre
     }
 
     @Override
-    public void getLastLocation() {
+    public void presentCurrentWeatherForecast(double latitude, double longitude) {
+        Double[] locationParams = {latitude, longitude};
+        currentWeatherTask = new CurrentWeatherTask(currentWeatherView, addressFinder, networkUtil); // TODO memory leak is possible here, check it later
+        currentWeatherTask.execute(locationParams);
+    }
+
+    @Override
+    public void refreshCurrentWeatherForecast() {
         locationService.getLastLocation();
     }
 
     @Override
     public void cancelCurrentWeatherTask() {
-        if (weatherForecastTask != null && weatherForecastTask.getStatus() == WeatherForecastTask.TASK_STATUS_RUNNING) {
-            weatherForecastTask.cancel(true);
+        if (currentWeatherTask != null && currentWeatherTask.getStatus() == CurrentWeatherTask.TASK_STATUS_RUNNING) {
+            currentWeatherTask.cancel(true);
         }
     }
 
@@ -47,12 +58,5 @@ public class CurrentWeatherPresenterImpl implements CurrentWeatherContract.Curre
     @Override
     public void openDailyWeatherActivity() {
         navigator.openDailyWeatherActivity();
-    }
-
-    @Override
-    public void onLocationReceived(double latitude, double longitude) {
-        Double[] locationParams = {latitude, longitude};
-        weatherForecastTask = new WeatherForecastTask(currentWeatherView); // TODO memory leak is possible here, check it later
-        weatherForecastTask.execute(locationParams);
     }
 }

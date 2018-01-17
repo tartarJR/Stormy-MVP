@@ -1,6 +1,5 @@
 package com.tatar.stormy.currentweather;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,14 +11,18 @@ import android.widget.TextView;
 import com.tatar.stormy.R;
 import com.tatar.stormy.dailyweather.DailyWeatherActivity;
 import com.tatar.stormy.hourlyweather.HourlyWeatherActivity;
+import com.tatar.stormy.location.AddressFinder;
+import com.tatar.stormy.location.LocationCallback;
+import com.tatar.stormy.location.LocationService;
 import com.tatar.stormy.model.CurrrentWeather;
+import com.tatar.stormy.util.NetworkUtil;
 import com.tatar.stormy.util.PermissionUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CurrentWeatherActivity extends AppCompatActivity implements CurrentWeatherContract.CurrentWeatherView, CurrentWeatherContract.Navigator {
+public class CurrentWeatherActivity extends AppCompatActivity implements CurrentWeatherContract.CurrentWeatherView, CurrentWeatherContract.Navigator, LocationCallback {
 
     @BindView(R.id.timeTextView)
     TextView timeTextView;
@@ -40,6 +43,9 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Current
     @BindView(R.id.locationTextView)
     TextView locationTextView;
 
+    private NetworkUtil networkUtil;
+    private LocationService locationService;
+    private AddressFinder addressFinder;
     private CurrentWeatherContract.CurrentWeatherPresenter currentWeatherPresenter;
 
     @Override
@@ -49,12 +55,15 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Current
 
         ButterKnife.bind(this);
 
-        currentWeatherPresenter = new CurrentWeatherPresenterImpl(this, this);
+        networkUtil = new NetworkUtil(CurrentWeatherActivity.this);
+        locationService = new LocationService(CurrentWeatherActivity.this, this);
+        addressFinder = new AddressFinder(CurrentWeatherActivity.this);
+        currentWeatherPresenter = new CurrentWeatherPresenterImpl(this, this, locationService, addressFinder, networkUtil);
     }
 
     @OnClick(R.id.refreshImageView)
     void refresh() {
-        currentWeatherPresenter.getLastLocation();
+        currentWeatherPresenter.refreshCurrentWeatherForecast();
     }
 
     @OnClick(R.id.hourlyButton)
@@ -138,7 +147,7 @@ public class CurrentWeatherActivity extends AppCompatActivity implements Current
     }
 
     @Override
-    public Context getContext() {
-        return CurrentWeatherActivity.this;
+    public void onLocationReceived(double latitude, double longitude) {
+        currentWeatherPresenter.presentCurrentWeatherForecast(latitude, longitude);
     }
 }

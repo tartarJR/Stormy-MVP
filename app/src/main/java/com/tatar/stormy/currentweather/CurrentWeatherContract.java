@@ -1,7 +1,5 @@
 package com.tatar.stormy.currentweather;
 
-import android.content.Context;
-
 import com.tatar.stormy.model.CurrrentWeather;
 
 public interface CurrentWeatherContract {
@@ -11,7 +9,9 @@ public interface CurrentWeatherContract {
 
         void disconnectFromLocationService();
 
-        void getLastLocation();
+        void presentCurrentWeatherForecast(double latitude, double longitude);
+
+        void refreshCurrentWeatherForecast();
 
         void cancelCurrentWeatherTask();
 
@@ -26,8 +26,6 @@ public interface CurrentWeatherContract {
         void toggleRefresh();
 
         void displayCurrentWeatherData(CurrrentWeather currrentWeather);
-
-        Context getContext();
     }
 
     interface Navigator {

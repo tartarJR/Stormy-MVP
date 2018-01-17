@@ -8,9 +8,15 @@ import android.net.NetworkInfo;
  * Created by musta on 11/19/2017.
  */
 
-public class NetworkUtils {
+public class NetworkUtil {
 
-    public static boolean isNetworkAvailable(Context context) {
+    private Context context;
+
+    public NetworkUtil(Context context) {
+        this.context = context;
+    }
+
+    public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();

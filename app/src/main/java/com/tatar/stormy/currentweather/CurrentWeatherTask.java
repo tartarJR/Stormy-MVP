@@ -1,4 +1,4 @@
-package com.tatar.stormy.service;
+package com.tatar.stormy.currentweather;
 
 import android.os.AsyncTask;
 
@@ -6,20 +6,25 @@ import com.tatar.stormy.R;
 import com.tatar.stormy.currentweather.CurrentWeatherContract;
 import com.tatar.stormy.location.AddressFinder;
 import com.tatar.stormy.model.Forecast;
-import com.tatar.stormy.util.NetworkUtils;
+import com.tatar.stormy.service.WeatherForecastResponse;
+import com.tatar.stormy.service.WeatherForecastService;
+import com.tatar.stormy.util.NetworkUtil;
 
-public class WeatherForecastTask extends AsyncTask<Double, Void, WeatherForecastResponse> {
+public class CurrentWeatherTask extends AsyncTask<Double, Void, WeatherForecastResponse> {
 
     public static final Status TASK_STATUS_RUNNING = AsyncTask.Status.RUNNING;
 
     private CurrentWeatherContract.CurrentWeatherView currentWeatherView;
     private WeatherForecastService weatherForecastService;
     private AddressFinder addressFinder;
+    private NetworkUtil networkUtil;
 
-    public WeatherForecastTask(CurrentWeatherContract.CurrentWeatherView currentWeatherView) {
+
+    public CurrentWeatherTask(CurrentWeatherContract.CurrentWeatherView currentWeatherView, AddressFinder addressFinder, NetworkUtil networkUtil) {
         this.currentWeatherView = currentWeatherView;
+        this.addressFinder = addressFinder;
+        this.networkUtil = networkUtil;
         weatherForecastService = new WeatherForecastService();
-        addressFinder = new AddressFinder(currentWeatherView.getContext());
     }
 
     @Override
@@ -37,7 +42,7 @@ public class WeatherForecastTask extends AsyncTask<Double, Void, WeatherForecast
 
         Forecast forecast = null;
 
-        if (NetworkUtils.isNetworkAvailable(currentWeatherView.getContext())) {
+        if (networkUtil.isNetworkAvailable()) {
 
             forecast = weatherForecastService.getWeatherForecastData(latitude, longitude);
 
