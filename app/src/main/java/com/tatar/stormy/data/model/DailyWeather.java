@@ -1,10 +1,10 @@
-package com.tatar.stormy.model;
+package com.tatar.stormy.data.model;
 
-public class HourlyWeather {
+public class DailyWeather {
 
     private long time;
     private String summary;
-    private double temperature;
+    private double maxTemperature;
     private String icon;
     private String timezone;
 
@@ -24,12 +24,12 @@ public class HourlyWeather {
         this.summary = summary;
     }
 
-    public double getTemperature() {
-        return temperature;
+    public double getMaxTemperature() {
+        return maxTemperature;
     }
 
-    public void setTemperature(double temperature) {
-        this.temperature = temperature;
+    public void setMaxTemperature(double maxTemperature) {
+        this.maxTemperature = maxTemperature;
     }
 
     public String getIcon() {

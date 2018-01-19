@@ -1,6 +1,6 @@
-package com.tatar.stormy.currentweather;
+package com.tatar.stormy.ui.currentweather;
 
-import com.tatar.stormy.model.CurrrentWeather;
+import com.tatar.stormy.data.model.CurrrentWeather;
 
 public interface CurrentWeatherContract {
 

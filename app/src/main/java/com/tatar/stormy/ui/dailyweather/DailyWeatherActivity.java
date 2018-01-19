@@ -1,4 +1,4 @@
-package com.tatar.stormy.dailyweather;
+package com.tatar.stormy.ui.dailyweather;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

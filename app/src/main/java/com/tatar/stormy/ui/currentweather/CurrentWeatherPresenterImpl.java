@@ -1,4 +1,4 @@
-package com.tatar.stormy.currentweather;
+package com.tatar.stormy.ui.currentweather;
 
 import com.tatar.stormy.location.AddressFinder;
 import com.tatar.stormy.location.LocationService;

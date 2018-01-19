@@ -1,12 +1,12 @@
-package com.tatar.stormy.service;
+package com.tatar.stormy.data.network;
 
 import android.util.Log;
 
 import com.tatar.stormy.BuildConfig;
-import com.tatar.stormy.model.CurrrentWeather;
-import com.tatar.stormy.model.DailyWeather;
-import com.tatar.stormy.model.Forecast;
-import com.tatar.stormy.model.HourlyWeather;
+import com.tatar.stormy.data.model.CurrrentWeather;
+import com.tatar.stormy.data.model.DailyWeather;
+import com.tatar.stormy.data.model.Forecast;
+import com.tatar.stormy.data.model.HourlyWeather;
 
 import org.json.JSONArray;
 import org.json.JSONException;

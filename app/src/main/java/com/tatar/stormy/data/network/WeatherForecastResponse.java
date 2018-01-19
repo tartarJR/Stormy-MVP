@@ -1,6 +1,6 @@
-package com.tatar.stormy.service;
+package com.tatar.stormy.data.network;
 
-import com.tatar.stormy.model.Forecast;
+import com.tatar.stormy.data.model.Forecast;
 
 public class WeatherForecastResponse {
 

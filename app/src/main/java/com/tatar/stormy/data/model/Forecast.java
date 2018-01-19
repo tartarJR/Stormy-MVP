@@ -1,4 +1,4 @@
-package com.tatar.stormy.model;
+package com.tatar.stormy.data.model;
 
 public class Forecast {
 

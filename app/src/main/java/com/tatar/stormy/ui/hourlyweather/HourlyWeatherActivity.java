@@ -1,4 +1,4 @@
-package com.tatar.stormy.hourlyweather;
+package com.tatar.stormy.ui.hourlyweather;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

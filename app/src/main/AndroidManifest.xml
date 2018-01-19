@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".currentweather.CurrentWeatherActivity"
+            android:name=".ui.currentweather.CurrentWeatherActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,11 +23,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".dailyweather.DailyWeatherActivity"
-            android:parentActivityName=".currentweather.CurrentWeatherActivity" />
+            android:name=".ui.dailyweather.DailyWeatherActivity"
+            android:parentActivityName=".ui.currentweather.CurrentWeatherActivity" />
         <activity
-            android:name=".hourlyweather.HourlyWeatherActivity"
-            android:parentActivityName=".currentweather.CurrentWeatherActivity" />
+            android:name=".ui.hourlyweather.HourlyWeatherActivity"
+            android:parentActivityName=".ui.currentweather.CurrentWeatherActivity" />
     </application>
 
 </manifest>

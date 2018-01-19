@@ -1,4 +1,4 @@
-package com.tatar.stormy.currentweather;
+package com.tatar.stormy.ui.currentweather;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,12 +9,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.tatar.stormy.R;
-import com.tatar.stormy.dailyweather.DailyWeatherActivity;
-import com.tatar.stormy.hourlyweather.HourlyWeatherActivity;
+import com.tatar.stormy.ui.dailyweather.DailyWeatherActivity;
+import com.tatar.stormy.ui.hourlyweather.HourlyWeatherActivity;
 import com.tatar.stormy.location.AddressFinder;
 import com.tatar.stormy.location.LocationCallback;
 import com.tatar.stormy.location.LocationService;
-import com.tatar.stormy.model.CurrrentWeather;
+import com.tatar.stormy.data.model.CurrrentWeather;
 import com.tatar.stormy.util.NetworkUtil;
 import com.tatar.stormy.util.PermissionUtil;
 

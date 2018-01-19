@@ -1,13 +1,12 @@
-package com.tatar.stormy.currentweather;
+package com.tatar.stormy.ui.currentweather;
 
 import android.os.AsyncTask;
 
 import com.tatar.stormy.R;
-import com.tatar.stormy.currentweather.CurrentWeatherContract;
 import com.tatar.stormy.location.AddressFinder;
-import com.tatar.stormy.model.Forecast;
-import com.tatar.stormy.service.WeatherForecastResponse;
-import com.tatar.stormy.service.WeatherForecastService;
+import com.tatar.stormy.data.model.Forecast;
+import com.tatar.stormy.data.network.WeatherForecastResponse;
+import com.tatar.stormy.data.network.WeatherForecastService;
 import com.tatar.stormy.util.NetworkUtil;
 
 public class CurrentWeatherTask extends AsyncTask<Double, Void, WeatherForecastResponse> {
