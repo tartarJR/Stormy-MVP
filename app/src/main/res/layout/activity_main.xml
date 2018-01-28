@@ -163,7 +163,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="#40ffffff"
-            android:text="HOURLY"
+            android:text="@string/hourly_btn_txt"
             android:textColor="@android:color/white" />
 
         <Button
@@ -173,8 +173,9 @@
             android:layout_marginLeft="3dp"
             android:layout_weight="1"
             android:background="#40ffffff"
-            android:text="7 DAYS"
-            android:textColor="@android:color/white" />
+            android:text="@string/weekly_btn_text"
+            android:textColor="@android:color/white"
+            android:layout_marginStart="3dp" />
 
     </LinearLayout>
 
